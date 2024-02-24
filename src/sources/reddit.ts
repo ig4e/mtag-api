@@ -1,6 +1,15 @@
 import axios from "axios";
 const redditClient = axios.create({
 	baseURL: "https://www.reddit.com/",
+	proxy: {
+		protocol: "http",
+		host: "p.webshare.io",
+		port: 80,
+		auth: {
+			username: "sekaidev-rotate",
+			password: "fxcbk0esu9pl",
+		},
+	},
 });
 
 const wsrvSupport = true;
