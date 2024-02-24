@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const redditClient = axios.create({
 	baseURL: "https://www.reddit.com/",
 	proxy: {
