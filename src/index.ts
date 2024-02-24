@@ -58,7 +58,7 @@ app.get(
 
 			return res.json({ meta, data: data!, pagination });
 		} catch (err) {
-			res.status(400).json({ error: (err as Error).message });
+			res.status(500).json({ error: (err as Error).message });
 		}
 	},
 );
