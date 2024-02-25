@@ -1,17 +1,19 @@
-import axios from "axios";
+import type GotScrapingModule from "got-scraping";
 
-const redditClient = axios.create({
-	baseURL: "https://www.reddit.com/",
-	proxy: {
-		protocol: "http",
-		host: "p.webshare.io",
-		port: 80,
-		auth: {
-			username: "sekaidev-rotate",
-			password: "fxcbk0esu9pl",
-		},
-	},
-});
+let gotScraping: GotScrapingModule.GotScraping;
+
+export async function importEsmModule<T>(name: string): Promise<T> {
+	const module = eval(`(async () => {return await import("${name}")})()`);
+	return module as T;
+}
+
+async function fetchWithGotScraping(url: string, options: GotScrapingModule.ExtendedOptionsOfTextResponseBody) {
+	gotScraping ??= (await importEsmModule<typeof GotScrapingModule>("got-scraping")).gotScraping;
+	return gotScraping(url, {
+		...options,
+		//proxyUrl: "http://sekaidev-rotate:fxcbk0esu9pl@p.webshare.io:80",
+	});
+}
 
 const wsrvSupport = true;
 
@@ -56,7 +58,11 @@ export function getSub({ mediaType }: { mediaType: "hentai" | "real" | "sfw" }):
 }
 
 export async function getPostsPage({ name, limit, sub }: { name?: string; limit: number; sub: string }) {
-	const { data } = await redditClient.get<{
+	const { body } = await fetchWithGotScraping(`https://www.reddit.com/r/${sub}.json?after=${name}`, {
+		responseType: "json" as any,
+	});
+
+	const data = body as {
 		data: {
 			children: {
 				kind: string;
@@ -84,19 +90,21 @@ export async function getPostsPage({ name, limit, sub }: { name?: string; limit:
 				};
 			}[];
 		};
-	}>(`/r/${sub}.json?after=${name}`);
+	};
 
 	const posts = data.data.children
 		.filter((post) => {
-			return post.kind === "t3" && post.data.preview?.images;
+			return post.kind === "t3" && (post.data.preview?.images?.length || 0) > 0;
 		})
 		.map((post) => {
 			const images = post.data.preview.images!.filter((image) => !image.source.url.includes("external"));
+			const imageAspectRatio = images[0]?.source.width / images[0]?.source.height;
 
 			return {
 				id: post.data.name,
 				name: post.data.name,
-				urls: images.map((image) => getImgSrc(image.resolutions[image.resolutions.length - 1].url)) || [],
+				urls: images.map((image) => getImgSrc(image.source.url)) || [],
+				aspectRatio: imageAspectRatio,
 				wsrvSupport: wsrvSupport,
 				sub,
 			};

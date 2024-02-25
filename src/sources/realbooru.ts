@@ -1,21 +1,17 @@
 import axios from "axios";
 import querystring from "querystring";
 
-const rule34Client = axios.create({
-	baseURL: "https://api.rule34.xxx",
+const realbooruClient = axios.create({
+	baseURL: "https://realbooru.com",
 });
 
 const wsrvSupport = false;
 
 export async function getPostsPage({ page, limit, tags }: { page: number; limit: number; tags: string[] }) {
-	const { data } = await rule34Client.get<
+	const { data } = await realbooruClient.get<
 		{
-			preview_url: string;
-			sample_url: string;
-			file_url: string;
-			directory: number;
+			directory: string;
 			hash: string;
-			width: number;
 			height: number;
 			id: number;
 			image: string;
@@ -23,15 +19,12 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 			owner: string;
 			parent_id: number;
 			rating: string;
-			sample: boolean;
+			sample: number;
 			sample_height: number;
 			sample_width: number;
 			score: number;
 			tags: string;
-			source: string;
-			status: string;
-			has_notes: boolean;
-			comment_count: number;
+			width: number;
 		}[]
 	>(
 		"/index.php?" +
@@ -48,7 +41,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 
 	return (data || []).map((image) => ({
 		id: image.id,
-		urls: [image.file_url],
+		urls: [`https://realbooru.com//images/${image.directory}/${image.image}`],
 		category: image.tags,
 		aspectRatio: image.width / image.height,
 		wsrvSupport,
@@ -56,7 +49,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 }
 
 export async function getTagsPage({ page, limit }: { page: number; limit: number }) {
-	const { data } = await rule34Client.get(
+	const { data } = await realbooruClient.get(
 		"/index.php?" +
 			querystring.stringify({
 				page: "dapi",
