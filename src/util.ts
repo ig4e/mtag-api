@@ -8,8 +8,6 @@ export function isVideoFile(fileName: string) {
 		".drc",
 		".f4v",
 		".flv",
-		".gif",
-		".gifv",
 		".m2v",
 		".m4p",
 		".m4v",
