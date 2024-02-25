@@ -1,8 +1,12 @@
 import axios from "axios";
 import querystring from "querystring";
+import http from "http";
+import https from "https";
 
 const realbooruClient = axios.create({
 	baseURL: "https://realbooru.com",
+	httpAgent: new http.Agent({ keepAlive: true }),
+	httpsAgent: new https.Agent({ keepAlive: true }),
 });
 
 const wsrvSupport = false;
@@ -39,13 +43,18 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 			`&tags=${tags.join("+")}`,
 	);
 
-	return (data || []).map((image) => ({
-		id: image.id,
-		urls: [`https://realbooru.com//images/${image.directory}/${image.image}`],
-		category: image.tags,
-		aspectRatio: image.width / image.height,
-		wsrvSupport,
-	}));
+	return (data || []).map((image) => {
+		const isVideo = image.image.includes(".webm");
+
+		return {
+			id: image.id,
+			urls: [`https://realbooru.com//images/${image.directory}/${image.image}`],
+			category: image.tags,
+			aspectRatio: image.width / image.height,
+			isVideo,
+			wsrvSupport,
+		};
+	});
 }
 
 export async function getTagsPage({ page, limit }: { page: number; limit: number }) {

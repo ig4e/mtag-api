@@ -41,7 +41,7 @@ app.get(
 			const isCategoriesEmpty = categories.length < 1;
 			const meta = { ...req.query, categories, redditAfter, sfw } as any;
 			const pagination = {} as { pages?: { next: number | null; prev: number }; reddit?: { [index: string]: string } };
-			let data: { id: string | number; urls: string[]; category?: string; sub?: string; wsrvSupport: boolean }[];
+			let data: { id: string | number; urls: string[]; category?: string; sub?: string; wsrvSupport: boolean; isVideo?: boolean }[];
 
 			if (source === "rule34") {
 				let tags: string[] = mediaType === "real" ? [mediaType] : [];
