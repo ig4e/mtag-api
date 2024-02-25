@@ -11,7 +11,7 @@ async function fetchWithGotScraping(url: string, options: GotScrapingModule.Exte
 	gotScraping ??= (await importEsmModule<typeof GotScrapingModule>("got-scraping")).gotScraping;
 	return gotScraping(url, {
 		...options,
-		//proxyUrl: "http://sekaidev-rotate:fxcbk0esu9pl@p.webshare.io:80",
+		proxyUrl: "http://sekaidev-rotate:fxcbk0esu9pl@p.webshare.io:80",
 	});
 }
 
