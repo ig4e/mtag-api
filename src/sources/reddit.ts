@@ -67,6 +67,7 @@ export async function getPostsPage({ name, limit, sub }: { name?: string; limit:
 			children: {
 				kind: string;
 				data: {
+					url: string;
 					name: string;
 					thumbnail: string;
 					preview: {
@@ -106,6 +107,7 @@ export async function getPostsPage({ name, limit, sub }: { name?: string; limit:
 				urls: images.map((image) => getImgSrc(image.source.url)) || [],
 				aspectRatio: imageAspectRatio,
 				wsrvSupport: wsrvSupport,
+				url: post.data.url,
 				sub,
 			};
 		})
