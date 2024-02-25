@@ -1,5 +1,6 @@
 import axios from "axios";
 import querystring from "querystring";
+import { isVideoFile } from "../util";
 
 const rule34Client = axios.create({
 	baseURL: "https://api.rule34.xxx",
@@ -51,6 +52,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 		urls: [image.file_url],
 		category: image.tags,
 		aspectRatio: image.width / image.height,
+		isVideo: isVideoFile(image.file_url),
 		wsrvSupport,
 	}));
 }

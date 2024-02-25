@@ -2,6 +2,7 @@ import axios from "axios";
 import querystring from "querystring";
 import http from "http";
 import https from "https";
+import { isVideoFile } from "../util";
 
 const realbooruClient = axios.create({
 	baseURL: "https://realbooru.com",
@@ -44,7 +45,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 	);
 
 	return (data || []).map((image) => {
-		const isVideo = image.image.includes(".webm");
+		const isVideo = isVideoFile(image.image);
 
 		return {
 			id: image.id,
