@@ -1,10 +1,14 @@
 import axios from "axios";
 import querystring from "querystring";
-import { isVideoFile } from "../util";
 import axiosRetry from "axios-retry";
+import http from "http";
+import https from "https";
+import { isVideoFile } from "../util";
 
 const rule34Client = axios.create({
 	baseURL: "https://api.rule34.xxx",
+	httpAgent: new http.Agent({ keepAlive: true }),
+	httpsAgent: new https.Agent({ keepAlive: true }),
 });
 
 axiosRetry(rule34Client, { retries: 10, retryCondition: () => true });

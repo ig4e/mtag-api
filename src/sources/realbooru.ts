@@ -2,8 +2,8 @@ import axios from "axios";
 import querystring from "querystring";
 import http from "http";
 import https from "https";
-import { isVideoFile } from "../util";
 import axiosRetry from "axios-retry";
+import { isVideoFile } from "../util";
 
 const realbooruClient = axios.create({
 	baseURL: "https://realbooru.com",
