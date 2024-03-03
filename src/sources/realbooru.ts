@@ -3,12 +3,15 @@ import querystring from "querystring";
 import http from "http";
 import https from "https";
 import { isVideoFile } from "../util";
+import axiosRetry from "axios-retry";
 
 const realbooruClient = axios.create({
 	baseURL: "https://realbooru.com",
 	httpAgent: new http.Agent({ keepAlive: true }),
 	httpsAgent: new https.Agent({ keepAlive: true }),
 });
+
+axiosRetry(realbooruClient, { retries: 10, retryCondition: () => true });
 
 const wsrvSupport = false;
 

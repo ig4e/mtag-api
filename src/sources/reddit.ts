@@ -1,19 +1,20 @@
-import type GotScrapingModule from "got-scraping";
+import axios from "axios";
+import axiosRetry from "axios-retry";
 
-let gotScraping: GotScrapingModule.GotScraping;
+const redditClient = axios.create({
+	baseURL: "https://www.reddit.com",
+	proxy: {
+		protocol: "http",
+		host: "p.webshare.io",
+		port: 80,
+		auth: {
+			username: "sekaidev-rotate",
+			password: "fxcbk0esu9pl",
+		},
+	},
+});
 
-export async function importEsmModule<T>(name: string): Promise<T> {
-	const module = eval(`(async () => {return await import("${name}")})()`);
-	return module as T;
-}
-
-async function fetchWithGotScraping(url: string, options: GotScrapingModule.ExtendedOptionsOfTextResponseBody) {
-	gotScraping ??= (await importEsmModule<typeof GotScrapingModule>("got-scraping")).gotScraping;
-	return gotScraping(url, {
-		...options,
-		proxyUrl: "http://sekaidev-rotate:fxcbk0esu9pl@p.webshare.io:80",
-	});
-}
+axiosRetry(redditClient, { retries: 10, retryCondition: () => true });
 
 const wsrvSupport = true;
 
@@ -58,11 +59,7 @@ export function getSub({ mediaType }: { mediaType: "hentai" | "real" | "sfw" }):
 }
 
 export async function getPostsPage({ name, limit, sub }: { name?: string; limit: number; sub: string }) {
-	const { body } = await fetchWithGotScraping(`https://www.reddit.com/r/${sub}.json?after=${name}`, {
-		responseType: "json" as any,
-	});
-
-	const data = body as {
+	const { data } = await redditClient.get<{
 		data: {
 			children: {
 				kind: string;
@@ -91,7 +88,7 @@ export async function getPostsPage({ name, limit, sub }: { name?: string; limit:
 				};
 			}[];
 		};
-	};
+	}>(`/r/${sub}.json?after=${name}`);
 
 	const posts = data.data.children
 		.filter((post) => {
