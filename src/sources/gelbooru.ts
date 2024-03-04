@@ -61,7 +61,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 			`&tags=${tags.join("+")}`,
 	);
 
-	return (data || { post: [] }).post.map((image) => {
+	return ((data?.post && data) || { post: [] }).post.map((image) => {
 		const isVideo = isVideoFile(image.image);
 
 		return {
