@@ -54,7 +54,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 			id: image.id,
 			url: `https://realbooru.com/index.php?page=post&s=view&id=${image.id}`,
 			urls: [`https://realbooru.com/images/${image.directory}/${image.image}`],
-			category: image.tags,
+			category: image.tags.replace(/ /g, ","),
 			aspectRatio: image.width / image.height,
 			isVideo,
 			wsrvSupport,

@@ -46,7 +46,11 @@ export type RedditImage = {
 	height: number;
 };
 
-export function getSub({ mediaType }: { mediaType: "hentai" | "real" | "sfw" }): string {
+export function getSub({ subs }: { subs: string[] }): string;
+export function getSub({ mediaType }: { mediaType: "hentai" | "real" | "sfw" }): string;
+export function getSub({ mediaType, subs }: { mediaType?: "hentai" | "real" | "sfw"; subs?: string[] }): string {
+	if (subs && subs.length > 0) return subs[Math.floor(Math.random() * subs.length)];
+
 	if (mediaType === "real") {
 		return realSubs[Math.floor(Math.random() * realSubs.length)];
 	} else if (mediaType === "hentai") {

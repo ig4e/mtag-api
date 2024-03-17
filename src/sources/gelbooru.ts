@@ -68,7 +68,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 			id: image.id,
 			url: `https://gelbooru.com/index.php?page=post&s=view&id=${image.id}`,
 			urls: [image.file_url],
-			category: image.tags,
+			category: image.tags.replace(/ /g, ","),
 			aspectRatio: image.width / image.height,
 			isVideo,
 			wsrvSupport,

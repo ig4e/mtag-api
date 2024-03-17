@@ -58,7 +58,7 @@ export async function getPostsPage({ page, limit, tags }: { page: number; limit:
 		id: image.id,
 		url: `https://rule34.xxx/index.php?page=post&s=view&id=${image.id}`,
 		urls: [image.file_url],
-		category: image.tags,
+		category: image.tags.replace(/ /g, ","),
 		aspectRatio: image.width / image.height,
 		isVideo: isVideoFile(image.file_url),
 		wsrvSupport,
