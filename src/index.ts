@@ -129,7 +129,7 @@ app.get(
 				data = images;
 			} else if (source === "pornhub") {
 				const [albumPage, albumIndex] = pornhubPagination.split(":").map(Number);
-				const albums = await pornhub.getAlbums({ query: categories.join(" "), page: albumPage });
+				const albums = await pornhub.getAlbums({ query: `${categories.join(" ")}${sfw ? " sfw" : ""}`, page: albumPage });
 				const album = await pornhub.getAlbum(albums.data[albumIndex]);
 
 				const nextIndex = albums.data.length > albumIndex + 1 ? albumIndex + 1 : 0;
