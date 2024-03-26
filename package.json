@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "swc-node src/app.ts",
+		"start": "node dist/index.js",
+		"start:swc": "swc-node src/index.ts",
 		"dev": "nodemon --exec node -r @swc-node/register src/index.ts",
 		"build": "tsc"
 	},
